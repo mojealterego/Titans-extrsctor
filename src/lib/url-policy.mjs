@@ -10,12 +10,13 @@ for (const [range, prefix] of [
   ['224.0.0.0', 4], ['240.0.0.0', 4]
 ]) blocked.addSubnet(range, prefix, 'ipv4');
 for (const [range, prefix] of [
-  ['::', 128], ['::1', 128], ['::ffff:0:0', 96],
+  ['::', 128], ['::1', 128],
   ['fc00::', 7], ['fe80::', 10], ['2001:db8::', 32], ['ff00::', 8]
 ]) blocked.addSubnet(range, prefix, 'ipv6');
 
 const normalizeHost = host => host.toLowerCase().replace(/\.$/, '').replace(/^\[|\]$/g, '');
 export function publicAddress(address) {
+  if (address.toLowerCase().startsWith('::ffff:')) return false;
   const family = isIP(address);
   return family !== 0 && !blocked.check(address, family === 4 ? 'ipv4' : 'ipv6');
 }

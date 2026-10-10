@@ -50,7 +50,7 @@ export class AssetStore {
     for (const [url, item] of this.items) {
       let contents = item.buffer;
       if (item.mime === 'text/css') {
-        const css = contents.toString('utf8');
+        const css = contents.toString('utf8').replace(/@import\s+[^;]+;?/gi, '');
         contents = Buffer.from(css.replace(/url\(\s*(['"]?)([^)'"]+)\1\s*\)/gi, (source, quote, link) => {
           if (/^(data:|#)/i.test(link)) return source;
           try {

@@ -30,5 +30,32 @@ export function createStaticHtml(html, pageUrl, assets, pages) {
       } catch { node.removeAttr(attribute); }
     }
   });
+  $('meta[http-equiv]').each((_, element) => {
+    if (($(element).attr('http-equiv') || '').toLowerCase() === 'refresh') $(element).remove();
+  });
+  $('link[rel="preconnect"], link[rel="dns-prefetch"]').remove();
+  $('input[type="password"]').removeAttr('value');
+  const rewriteInlineStyle = css => css
+    .replace(/@import\s+[^;]+;?/gi, '')
+    .replace(/url\(\s*(['"]?)([^)'"]+)\1\s*\)/gi, (original, quote, link) => {
+      if (/^(data:|#)/i.test(link)) return original;
+      try {
+        const asset = assets.get(new URL(link, pageUrl).href);
+        return asset ? 'url("../' + asset + '")' : 'url("")';
+      } catch { return 'url("")'; }
+    });
+  $('style').each((_, element) => $(element).text(rewriteInlineStyle($(element).html() || '')));
+  $('[style]').each((_, element) => $(element).attr('style', rewriteInlineStyle($(element).attr('style') || '')));
+  $('[srcset]').each((_, element) => {
+    const output = ($(element).attr('srcset') || '').split(',').map(part => {
+      const [link, ...descriptor] = part.trim().split(/\s+/);
+      try {
+        const asset = assets.get(new URL(link, pageUrl).href);
+        return asset ? '../' + asset + (descriptor.length ? ' ' + descriptor.join(' ') : '') : '';
+      } catch { return ''; }
+    }).filter(Boolean);
+    if (output.length) $(element).attr('srcset', output.join(', '));
+    else $(element).removeAttr('srcset');
+  });
   return '<!DOCTYPE html>\n' + $.html();
 }

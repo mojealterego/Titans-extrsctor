@@ -1,0 +1,23 @@
+services:
+  titans:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8787:8787"
+    environment:
+      TITANS_API_TOKEN: "${TITANS_API_TOKEN:?Set a strong access token}"
+      TITANS_PORT: "8787"
+      TITANS_BIND_HOST: "0.0.0.0"
+      TITANS_ALLOW_PUBLIC_BIND: "1"
+    volumes:
+      - ./output:/app/output
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,size=536870912
+      - /home/node/.cache:rw,nosuid,size=268435456,uid=1000,gid=1000
+    shm_size: "1gb"
+    pids_limit: 256
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

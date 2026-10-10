@@ -12,10 +12,10 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Install runtime dependencies
@@ -26,3 +26,15 @@ jobs:
         run: npm run check
       - name: Unit and integration tests
         run: npm test
+      - name: Validate Docker Compose
+        run: TITANS_API_TOKEN=ci-ephemeral-token-not-for-deployment docker compose config --quiet
+      - name: Container image build
+        run: docker build -t titans-extractor:ci .
+      - name: Package CLI source distribution
+        run: mkdir -p dist && npm pack --pack-destination dist
+      - name: Publish verified CLI bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: titans-extractor-node22
+          path: dist/*.tgz
+          if-no-files-found: error

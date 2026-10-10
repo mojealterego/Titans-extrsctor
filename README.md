@@ -125,3 +125,25 @@ node src/diff.mjs output/baseline output/current --out output/changes.json
 ~~~
 
 The comparison reports added/removed/changed pages using saved HTML checksums and HTTP status. This is not pixel-level or semantic diff. TITANS also writes **openapi.observed.json**, a provisional OpenAPI 3.1 inventory of endpoints *seen during the current browser run*, not a verified service contract. Paths with opaque long identifiers are masked.
+
+## HAR import / interoperability
+
+Authorized HAR exports from browser developer tools or compatible proxy tools can be transformed into metadata-only endpoint inventories:
+
+~~~bash
+node src/har.mjs --authorized --in ./capture.har --out ./output/har-summary.json --allow-host your-site.example
+~~~
+
+The importer discards payloads, headers, cookies and query strings, then writes observed status metadata and a provisional OpenAPI document. Other external programs (Burp Suite, mitmproxy, Postman, HTTrack, Terraform) are not silently installed. Original HAR files can contain credentials and require protected storage.
+
+## Docker Compose (localhost only)
+
+An optional container runs Node.js and Chromium under a non-root account, uses a read-only filesystem with temporary scratch locations, and publishes port 8787 only on the **host loopback interface**. Prepare an output directory that container UID 1000 can write and configure a strong API token:
+
+~~~bash
+mkdir -p output
+export TITANS_API_TOKEN="$(node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))")"
+docker compose up --build
+~~~
+
+The dashboard is then available at http://127.0.0.1:8787. Browser networking remains enabled for authorized captures; apply host-level egress restrictions when assessing untrusted sites. Container deployment should be independently tested on each target platform.

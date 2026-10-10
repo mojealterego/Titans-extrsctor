@@ -1,0 +1,14 @@
+.git
+.github
+node_modules
+output
+backup
+reports
+test-results
+coverage
+*.db
+*.sqlite
+*.log
+.env
+*.PDF
+*.pdf

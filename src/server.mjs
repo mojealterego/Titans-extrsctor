@@ -83,9 +83,10 @@ function enqueue(url, maxPages) {
   setImmediate(() => { void nextJob(); });
   return job;
 }
-export async function startServer({ token = process.env.TITANS_API_TOKEN, port = Number(process.env.TITANS_PORT || 8787) } = {}) {
+export async function startServer({ token = process.env.TITANS_API_TOKEN, port = Number(process.env.TITANS_PORT || 8787), host = process.env.TITANS_BIND_HOST || '127.0.0.1' } = {}) {
   if (!token || token.length < 20) throw new Error('Set TITANS_API_TOKEN with at least 20 characters');
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid TCP port');
+  if (!['127.0.0.1', '::1'].includes(host) && process.env.TITANS_ALLOW_PUBLIC_BIND !== '1') throw new Error('Non-loopback bind needs TITANS_ALLOW_PUBLIC_BIND=1');
   const assets = {
     '/': ['web/dashboard.html', 'text/html; charset=utf-8'],
     '/app.js': ['web/app.js', 'text/javascript; charset=utf-8'],
@@ -140,9 +141,9 @@ export async function startServer({ token = process.env.TITANS_API_TOKEN, port =
   });
   await new Promise((ok, fail) => {
     server.once('error', fail);
-    server.listen(port, '127.0.0.1', ok);
+    server.listen(port, host, ok);
   });
-  console.log('TITANS local dashboard: http://127.0.0.1:' + server.address().port);
+  console.log('TITANS dashboard: http://' + host + ':' + server.address().port);
   return server;
 }
 if (process.argv[1] && process.argv[1].endsWith('/server.mjs')) {

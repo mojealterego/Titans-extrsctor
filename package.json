@@ -3,14 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
-  "bin": { "titans": "./src/cli.mjs" },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "titans": "./src/cli.mjs"
+  },
   "scripts": {
     "start": "node src/cli.mjs",
     "serve": "node src/server.mjs",
     "test": "node --test",
     "check": "node --check src/cli.mjs && node --check src/server.mjs && node --check src/engine/browser.mjs",
-    "browser:install": "playwright install chromium"
+    "browser:install": "playwright install chromium",
+    "har:help": "node src/har.mjs --help",
+    "diff:help": "node src/diff.mjs"
   },
-  "dependencies": { "cheerio": "^1.0.0", "playwright": "^1.50.0" }
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "playwright": "^1.50.0"
+  },
+  "files": [
+    "src",
+    "docs",
+    "README.md"
+  ]
 }

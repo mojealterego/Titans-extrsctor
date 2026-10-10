@@ -5,6 +5,7 @@ import { loadRobots } from '../lib/robots.mjs';
 import { scanExposures, maskSecrets, assessHeaders } from '../lib/audit.mjs';
 import { createStaticHtml, pageFilename } from '../lib/snapshot.mjs';
 import { AssetStore } from '../lib/assets.mjs';
+import { generateObservedOpenApi } from '../lib/openapi.mjs';
 import { BrowserEngine } from '../engine/browser.mjs';
 
 export async function extractSite(options) {
@@ -109,6 +110,7 @@ export async function extractSite(options) {
     ]
   };
   await writeFile(join(destination, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+  await writeFile(join(destination, 'openapi.observed.json'), JSON.stringify(generateObservedOpenApi(inventory), null, 2) + '\n', 'utf8');
   const summary = [
     '# TITANS EXTRACTOR — report', '',
     'Pages: ' + pages.length,

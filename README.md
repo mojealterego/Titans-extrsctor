@@ -56,6 +56,7 @@ output/sample/
   assets/<sha256>.<ext>
   manifest.json
   report.md
+  openapi.observed.json
 ~~~
 
 Generated pages are intentionally static: JavaScript, embedded documents, remote actions and event handlers are neutralized. This is not a production-equivalent website. CSS not loaded during capture might be incomplete.
@@ -114,3 +115,13 @@ npm test
 GitHub Actions installs dependencies and Chromium, performs syntax checks, and runs the automated test suite on pushes to main. See workflow status for actual outcomes; this README does not claim that tests have passed.
 
 The repository name is kept as provided: **mojealterego/Titans-extrsctor**.
+
+## Snapshot regression / drift detection
+
+Compare two previously generated archives offline:
+
+~~~bash
+node src/diff.mjs output/baseline output/current --out output/changes.json
+~~~
+
+The comparison reports added/removed/changed pages using saved HTML checksums and HTTP status. This is not pixel-level or semantic diff. TITANS also writes **openapi.observed.json**, a provisional OpenAPI 3.1 inventory of endpoints *seen during the current browser run*, not a verified service contract. Paths with opaque long identifiers are masked.

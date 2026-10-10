@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TITANS EXTRACTOR — Command Center</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><span class="mark">T<span class="mark-accent">.</span></span><span class="brand">TITANS <strong>EXTRACTOR</strong></span><span class="badge">LOCAL • SECURED</span></header>
+    <section class="hero"><p class="eyebrow">AUTHORIZED DIGITAL PRESERVATION</p><h1>Extract intelligence.<br><em>Preserve structure.</em></h1><p class="lede">Renderowanie witryn, statyczne archiwa, inwentaryzacja API oraz diagnostyka ekspozycji — z kontrolą zakresu i lokalnym przetwarzaniem.</p></section>
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-header"><span>01 / NEW EXTRACTION</span><span>ENGINE • CHROMIUM</span></div>
+        <label for="token">Lokalny klucz dostępu</label><input id="token" type="password" autocomplete="off" placeholder="TITANS_API_TOKEN">
+        <label for="url">Adres witryny</label><input id="url" type="url" spellcheck="false" placeholder="https://twoja-strona.pl" required>
+        <label for="pages">Limit podstron</label><input id="pages" type="number" min="1" max="10" value="5">
+        <label class="confirm"><input id="authorized" type="checkbox"><span>Potwierdzam własność witryny lub wyraźne upoważnienie do analizy i archiwizacji.</span></label>
+        <button id="start">URUCHOM EKSTRAKCJĘ <span>↗</span></button>
+        <p class="hint">Przetwarzanie ograniczone do dozwolonej domeny. Zasady robots.txt są respektowane.</p>
+      </section>
+      <section class="panel results">
+        <div class="panel-header"><span>02 / MISSION TELEMETRY</span><span id="connection">STAN: GOTOWOŚĆ</span></div>
+        <p class="caption">BIEŻĄCE ZADANIE</p><h2 id="state">Brak aktywnego zadania</h2><p class="muted" id="detail">Wprowadź klucz API, adres i potwierdzenie uprawnień.</p>
+        <div class="stats">
+          <div><strong id="pagesCount">—</strong><small>STRONY</small></div>
+          <div><strong id="assetsCount">—</strong><small>ZASOBY</small></div>
+          <div><strong id="apiCount">—</strong><small>API</small></div>
+          <div><strong id="findingsCount">—</strong><small>SYGNAŁY</small></div>
+        </div>
+        <pre id="log" aria-live="polite">Awaiting mission.</pre>
+      </section>
+    </div>
+    <footer><span>ENGINEERING FIRST. AUTHORISATION ALWAYS.</span><span>TITANS / v0.1.0</span></footer>
+  </main>
+</body>
+</html>
